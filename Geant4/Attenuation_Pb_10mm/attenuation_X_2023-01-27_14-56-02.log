@@ -1,0 +1,1171 @@
+utrwrapper.py> Started processing extended macro file '/nfs/ldas02/zh02/home/mbeuschlein/utr/macros/Attenuation/attenuation_Pb_10mm.xmac' at 2023-01-27 14-56-02
+utrwrapper.py> Contents of extended macro file '/nfs/ldas02/zh02/home/mbeuschlein/utr/macros/Attenuation/attenuation_Pb_10mm.xmac':
+Dump of attenuation_Pb_10mm.xmac> #!/usr/bin/env utrwrapper.py
+Dump of attenuation_Pb_10mm.xmac> ## An (utrwrapper.py) extended macro starts with a configuration header embedded in comment lines (preceded by a single '#')
+Dump of attenuation_Pb_10mm.xmac> ## For real comment lines in the header use multiple '#'s
+Dump of attenuation_Pb_10mm.xmac> ## Run utrwrapper.py -h for a list of all available configuration options and their effects
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> ## This macro simulates the attenuation effect of a disk with a given material (see DETECTOR_CONSTRUCTION/DHIPS_2019/Attenuation).
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> #[generalConfig]
+Dump of attenuation_Pb_10mm.xmac> #outputDir=../Output_utr/Attenuation/Attenuation_Pb_10mm
+Dump of attenuation_Pb_10mm.xmac> #niceness=19
+Dump of attenuation_Pb_10mm.xmac> #threads=100
+Dump of attenuation_Pb_10mm.xmac> #ensureTerminalMultiplexer=True
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> #[environmentVariables]
+Dump of attenuation_Pb_10mm.xmac> #filenamePrefix=attenuation_
+Dump of attenuation_Pb_10mm.xmac> #filenameSuffix=
+Dump of attenuation_Pb_10mm.xmac> #filenameTemplate={filenamePrefix}{loopVar}_MeV_sim_
+Dump of attenuation_Pb_10mm.xmac> #setterCmd=/gps/ene/mono {loopVar} MeV
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> #[utrBuildOptions]
+Dump of attenuation_Pb_10mm.xmac> #CAMPAIGN=Others
+Dump of attenuation_Pb_10mm.xmac> #DETECTOR_CONSTRUCTION=Attenuation_Pb_10mm
+Dump of attenuation_Pb_10mm.xmac> #GENERATOR_ANGCORR=OFF
+Dump of attenuation_Pb_10mm.xmac> #GENERATOR_ANGDIST=OFF
+Dump of attenuation_Pb_10mm.xmac> #EVENT_EKIN=ON
+Dump of attenuation_Pb_10mm.xmac> #EVENT_EDEP=OFF
+Dump of attenuation_Pb_10mm.xmac> #EVENT_ID=OFF
+Dump of attenuation_Pb_10mm.xmac> #EVENT_PARTICLE=ON
+Dump of attenuation_Pb_10mm.xmac> #PRINT_PROGRESS=2000000
+Dump of attenuation_Pb_10mm.xmac> #EM_LIVERMORE_POLARIZED=OFF
+Dump of attenuation_Pb_10mm.xmac> #EM_LIVERMORE=OFF
+Dump of attenuation_Pb_10mm.xmac> #EM_PENELOPE=ON
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> #[getHistogramArgs]
+Dump of attenuation_Pb_10mm.xmac> #quantity=ekin
+Dump of attenuation_Pb_10mm.xmac> #maxenergy=12
+Dump of attenuation_Pb_10mm.xmac> #maxid=0       # max ID of sensitive volumes
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> #[histogramToTxtArgs]
+Dump of attenuation_Pb_10mm.xmac> #end=0         # Don't export sum hist to txt
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> ## The required magic string signals the end of the configuration header
+Dump of attenuation_Pb_10mm.xmac> #START_OF_MACRO
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> # Never simulate more than 2^32= 4294967296 particles using /run/beamOn, since this causes an overflow in the random number seed, giving you in principle the same results over and over again.
+Dump of attenuation_Pb_10mm.xmac> # In such cases execute the same simulation multiple times instead.
+Dump of attenuation_Pb_10mm.xmac> /control/alias beamOnStatistics 200000    #2000000000
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> # Get the filenamePrefix and filenameSuffix variables defined in the configuration header as GEANT4 aliases
+Dump of attenuation_Pb_10mm.xmac> /control/getEnv filenamePrefix
+Dump of attenuation_Pb_10mm.xmac> /control/getEnv filenameSuffix
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> # Disable appendage of additional IDs to filenames (as unique filenames containing the simulated energy will be used for each beamOn)
+Dump of attenuation_Pb_10mm.xmac> /utr/setUseFilenameID True
+Dump of attenuation_Pb_10mm.xmac> # Set the number of required decimal places for padding of loopVar (no padding here as loopVar only takes integer values)
+Dump of attenuation_Pb_10mm.xmac> /control/alias appendZerosToVarPadding 2
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> # Set up a monoenergetic, circular, polarized beam with a diameter that is slightly larger than the collimator diameter (0.75in <-> 9.525 mm) in order to simulate scattering off the collimator as well.
+Dump of attenuation_Pb_10mm.xmac> /run/initialize
+Dump of attenuation_Pb_10mm.xmac> /gps/particle gamma
+Dump of attenuation_Pb_10mm.xmac> /gps/pos/type Point
+Dump of attenuation_Pb_10mm.xmac> #/gps/pos/type Beam
+Dump of attenuation_Pb_10mm.xmac> #/gps/pos/shape Circle
+Dump of attenuation_Pb_10mm.xmac> #/gps/pos/radius 0.5 mm
+Dump of attenuation_Pb_10mm.xmac> /gps/pos/centre 0. 0. -5 mm
+Dump of attenuation_Pb_10mm.xmac> /gps/direction 0. 0. 1.
+Dump of attenuation_Pb_10mm.xmac> #/gps/polarization 1. 0. 0.
+Dump of attenuation_Pb_10mm.xmac> /gps/ene/type Mono
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> 
+Dump of attenuation_Pb_10mm.xmac> # Run the generic macro in a loop
+Dump of attenuation_Pb_10mm.xmac> # loop Syntax: /control/loop MacroFile Variable Start End Increment
+Dump of attenuation_Pb_10mm.xmac> # for each Syntax: /control/foreach MacroFile Variable ValueList
+Dump of attenuation_Pb_10mm.xmac> # To use the variable in the macro to be looped refer to it wrapped in {} as {Variable} in the macro
+Dump of attenuation_Pb_10mm.xmac> # Remember that due to the numerical inaccuracies when adding float numbers, a loop might generate a run more or less than expected!
+Dump of attenuation_Pb_10mm.xmac> /control/foreach macros/examples/genericLoopable.mac loopVar 1. 2. # 0.5 1.0 1.5 2.0 2.5 3.0 4.0 5. 6. 7. 8. 9. 10. 
+Dump of attenuation_Pb_10mm.xmac> #/control/loop macros/examples/genericLoopable.mac loopVar 10. 15. 2.5
+utrwrapper.py> End of extended macro file '/nfs/ldas02/zh02/home/mbeuschlein/utr/macros/Attenuation/attenuation_Pb_10mm.xmac'
+utrwrapper.py> Contents of referred macro file 'macros/examples/genericLoopable.mac':
+Dump of genericLoopable.mac> # A very minimal and generic macro to be used with /control/loop or /control/foreach commands in other macros.
+Dump of genericLoopable.mac> # Using environment variables which can be easily set with the utrwrapper, this macro can be used for virtually
+Dump of genericLoopable.mac> # any type of simulation (efficiency and angular distribution), by packing the relevant commands and variables
+Dump of genericLoopable.mac> # in a environment variable, whose alias values are resolved when /control/getEnv is used.
+Dump of genericLoopable.mac> # Without using environment variables one can still achieve most of the functionality but with each possibility
+Dump of genericLoopable.mac> # hard-coded in strdoif statements or by forgoing additional parameters, see below for three possible implementations
+Dump of genericLoopable.mac> 
+Dump of genericLoopable.mac> # Execute a very generic setter command (stored in an environment variable e.g. $setterCmd=/gps/ene/mono {loopVar} MeV
+Dump of genericLoopable.mac> # This is however a bit buggy and requires a meaningless '/control/alias loopVar {loopVar}' to get rid of an "Alias <loopVar> not found -- command ignored" message
+Dump of genericLoopable.mac> /control/alias loopVar {loopVar}
+Dump of genericLoopable.mac> /control/getEnv setterCmd
+Dump of genericLoopable.mac> {setterCmd}
+Dump of genericLoopable.mac> 
+Dump of genericLoopable.mac> ## Execute a very generic setter command, but without the possibility of other parameters (like MeV unit)
+Dump of genericLoopable.mac> ## (Note that /gps/ene/mono uses keV as the default unit when the unit is not specified)
+Dump of genericLoopable.mac> #{setterCmd} {loopVar}
+Dump of genericLoopable.mac> 
+Dump of genericLoopable.mac> ## Execute only known commands in a rather explicit way (does not warn about unknown commands however!)
+Dump of genericLoopable.mac> #/control/strdoif {setterCmd} == /ang/delta23 /ang/delta23 {loopVar}
+Dump of genericLoopable.mac> #/control/strdoif {setterCmd} == /gps/ene/mono /gps/ene/mono {loopVar} MeV
+Dump of genericLoopable.mac> 
+Dump of genericLoopable.mac> 
+Dump of genericLoopable.mac> # Set the output filename to contain the simulated energy in an uniform number format
+Dump of genericLoopable.mac> /utr/appendZerosToVar loopVar {loopVar} {appendZerosToVarPadding}
+Dump of genericLoopable.mac> /control/getEnv filenameTemplate
+Dump of genericLoopable.mac> /utr/setFilename {filenameTemplate}
+Dump of genericLoopable.mac> 
+Dump of genericLoopable.mac> ## Example of an alternative way to set the output filename not using environment variables:
+Dump of genericLoopable.mac> ## For this to work, however, all GEANT4 aliases must still be defined (e.g. just set filenameSuffix=NOTUSED)
+Dump of genericLoopable.mac> #/control/strdoif {filenameStyle} == full /utr/setFilename {filenamePrefix}{loopVar}{filenameSuffix}
+Dump of genericLoopable.mac> #/control/strdoif {filenameStyle} == noSuffix /utr/setFilename {filenamePrefix}{loopVar}
+Dump of genericLoopable.mac> 
+Dump of genericLoopable.mac> # Never simulate more than 2^32= 4294967296 particles using /run/beamOn, since this causes an overflow in the random number seed, giving you in principle the same results over and over again.
+Dump of genericLoopable.mac> # In such cases execute the same simulation multiple times instead.
+Dump of genericLoopable.mac> /run/beamOn {beamOnStatistics}
+utrwrapper.py> End of referred macro file 'macros/examples/genericLoopable.mac'
+utrwrapper.py> Running cmake on utr  at 2023-01-27 14-56-02 (current runtime: 0h 00m 00s)
+cmake on utr> -- Configuring done
+cmake on utr> -- Generating done
+cmake on utr> -- Build files have been written to: /nfs/ldas02/zh02/home/mbeuschlein/utr/build
+utrwrapper.py> Running buildsystem on utr  at 2023-01-27 14-56-03 (current runtime: 0h 00m 00s)
+buildsystem on utr> Scanning dependencies of target utr
+buildsystem on utr> [  2%] Building CXX object CMakeFiles/utr.dir/src/utr.cc.o
+buildsystem on utr> [  9%] Building CXX object CMakeFiles/utr.dir/src/ActionInitialization.cc.o
+buildsystem on utr> [  9%] Building CXX object CMakeFiles/utr.dir/src/AngularCorrelationGenerator.cc.o
+buildsystem on utr> [ 13%] Building CXX object CMakeFiles/utr.dir/src/AngularCorrelationMessenger.cc.o
+buildsystem on utr> [ 15%] Building CXX object CMakeFiles/utr.dir/DetectorConstruction/Others/Attenuation_Pb_10mm/DetectorConstruction.cc.o
+buildsystem on utr> [ 15%] Building CXX object CMakeFiles/utr.dir/src/BGO.cc.o
+buildsystem on utr> [ 27%] Building CXX object CMakeFiles/utr.dir/src/AngularDistributionMessenger.cc.o
+buildsystem on utr> [ 27%] Building CXX object CMakeFiles/utr.dir/src/AngularDistribution.cc.o
+buildsystem on utr> [ 25%] Building CXX object CMakeFiles/utr.dir/src/CeBr3_2x2.cc.o
+buildsystem on utr> [ 27%] Building CXX object CMakeFiles/utr.dir/src/AngularDistributionGenerator.cc.o
+buildsystem on utr> [ 31%] Building CXX object CMakeFiles/utr.dir/src/Detector.cc.o
+buildsystem on utr> [ 34%] Building CXX object CMakeFiles/utr.dir/src/EventAction.cc.o
+buildsystem on utr> [ 38%] Building CXX object CMakeFiles/utr.dir/src/EnergyDepositionSD.cc.o
+buildsystem on utr> [ 50%] Building CXX object CMakeFiles/utr.dir/src/Filter_Case.cc.o
+buildsystem on utr> [ 40%] Building CXX object CMakeFiles/utr.dir/src/GeneralParticleSource.cc.o
+buildsystem on utr> [ 50%] Building CXX object CMakeFiles/utr.dir/src/HPGe_60_TUNL_30986.cc.o
+buildsystem on utr> [ 50%] Building CXX object CMakeFiles/utr.dir/src/Germanium2_TUD.cc.o
+buildsystem on utr> [ 54%] Building CXX object CMakeFiles/utr.dir/src/HPGe_60_TUNL_21033.cc.o
+buildsystem on utr> [ 56%] Building CXX object CMakeFiles/utr.dir/src/HPGe_55_TUNL_21638.cc.o
+buildsystem on utr> [ 56%] Building CXX object CMakeFiles/utr.dir/src/Germanium1_TUD.cc.o
+buildsystem on utr> [ 50%] Building CXX object CMakeFiles/utr.dir/src/FilterCase.cc.o
+buildsystem on utr> [ 63%] Building CXX object CMakeFiles/utr.dir/src/HPGe_60_TUNL_40663.cc.o
+buildsystem on utr> [ 63%] Building CXX object CMakeFiles/utr.dir/src/HPGe_Clover.cc.o
+buildsystem on utr> [ 59%] Building CXX object CMakeFiles/utr.dir/src/HPGe_55_TUNL_31524.cc.o
+buildsystem on utr> [ 68%] Building CXX object CMakeFiles/utr.dir/src/HPGe_60_TUNL_31061.cc.o
+buildsystem on utr> [ 59%] Building CXX object CMakeFiles/utr.dir/src/HPGe_ANL.cc.o
+buildsystem on utr> [ 72%] Building CXX object CMakeFiles/utr.dir/src/LaBr_3x3.cc.o
+buildsystem on utr> [ 81%] Building CXX object CMakeFiles/utr.dir/src/Materials.cc.o
+buildsystem on utr> [ 68%] Building CXX object CMakeFiles/utr.dir/src/HPGe_Stuttgart.cc.o
+buildsystem on utr> [ 84%] Building CXX object CMakeFiles/utr.dir/src/HPGe_Cologne.cc.o
+buildsystem on utr> [ 88%] Building CXX object CMakeFiles/utr.dir/src/LaBr_Cologne.cc.o
+buildsystem on utr> [ 88%] Building CXX object CMakeFiles/utr.dir/src/RunAction.cc.o
+buildsystem on utr> [ 75%] Building CXX object CMakeFiles/utr.dir/src/HPGe_Coaxial.cc.o
+buildsystem on utr> [ 88%] Building CXX object CMakeFiles/utr.dir/src/LaBr_Galatea.cc.o
+buildsystem on utr> [ 88%] Building CXX object CMakeFiles/utr.dir/src/Physics.cc.o
+buildsystem on utr> [ 95%] Building CXX object CMakeFiles/utr.dir/src/LaBr_TUD.cc.o
+buildsystem on utr> [ 95%] Building CXX object CMakeFiles/utr.dir/src/ZeroDegree.cc.o
+buildsystem on utr> [ 95%] Building CXX object CMakeFiles/utr.dir/src/utrMessenger.cc.o
+buildsystem on utr> [ 95%] Building CXX object CMakeFiles/utr.dir/src/Polarimeter_TUD.cc.o
+buildsystem on utr> [ 95%] Building CXX object CMakeFiles/utr.dir/src/TargetHit.cc.o
+buildsystem on utr> [ 97%] Building CXX object CMakeFiles/utr.dir/src/SecondarySD.cc.o
+buildsystem on utr> [ 95%] Building CXX object CMakeFiles/utr.dir/src/ParticleSD.cc.o
+buildsystem on utr> [ 97%] Building CXX object CMakeFiles/utr.dir/src/utrFilenameTools.cc.o
+buildsystem on utr> [100%] Linking CXX executable utr
+buildsystem on utr> CMakeFiles/utr.dir/src/utrFilenameTools.cc.o: In function `utrFilenameTools::getMasterFilename[abi:cxx11]()':
+buildsystem on utr> /nfs/ldas02/zh02/home/mbeuschlein/utr/src/utrFilenameTools.cc:87: warning: the use of `tmpnam' is dangerous, better use `mkstemp'
+buildsystem on utr> [100%] Built target utr
+utrwrapper.py> Running cmake on OutputProcessing scripts  at 2023-01-27 14-56-11 (current runtime: 0h 00m 09s)
+cmake on OutputProcessing scripts> -- Configuring done
+cmake on OutputProcessing scripts> -- Generating done
+cmake on OutputProcessing scripts> -- Build files have been written to: /nfs/ldas02/zh02/home/mbeuschlein/utr/build/OutputProcessing
+utrwrapper.py> Running buildsystem on OutputProcessing scripts  at 2023-01-27 14-56-12 (current runtime: 0h 00m 09s)
+buildsystem on OutputProcessing scripts> [ 16%] Built target getSolidAngleCoverage
+buildsystem on OutputProcessing scripts> [ 66%] Built target getHistogram
+buildsystem on OutputProcessing scripts> [ 66%] Built target histogramToTxt
+buildsystem on OutputProcessing scripts> [100%] Built target rootToTxt
+buildsystem on OutputProcessing scripts> [100%] Built target mergeFiles
+buildsystem on OutputProcessing scripts> [100%] Built target getHistogram-Eventwise
+utrwrapper.py> Running utr  at 2023-01-27 14-56-12 (current runtime: 0h 00m 09s)
+utr> Using file name prefix 'utr0' ...
+utr> 
+utr> **************************************************************
+utr>  Geant4 version Name: geant4-10-07-patch-01 [MT]   (5-February-2021)
+utr>   << in Multi-threaded mode >> 
+utr>                        Copyright : Geant4 Collaboration
+utr>                       References : NIM A 506 (2003), 250-303
+utr>                                  : IEEE-TNS 53 (2006), 270-278
+utr>                                  : NIM A 835 (2016), 186-225
+utr>                              WWW : http://geant4.org/
+utr> **************************************************************
+utr> 
+utr> Initializing DetectorConstruction...
+utr> Initializing PhysicsList...
+utr> ================================================================================
+utr> Using the following physics lists:
+utr> 	G4EmPenelopePhysics ...
+utr> 	G4HadronElasticPhysics ...
+utr> 	G4HadronPhysicsFTFP_BERT ...
+utr> ================================================================================
+utr> ActionInitialization...
+utr> Executing macro file /nfs/ldas02/zh02/home/mbeuschlein/utr/macros/Attenuation/attenuation_Pb_10mm.xmac
+utr> 
+utr>  hInelastic FTFP_BERT : threshold between BERT and FTFP is over the interval 
+utr>  for pions :   3 to 6 GeV
+utr>  for kaons :   3 to 6 GeV
+utr>  for proton :  3 to 6 GeV
+utr>  for neutron : 3 to 6 GeV
+utr> 
+utr> 
+utr> ### ===  Deexcitation model UAtomDeexcitation is activated for 1 region:
+utr>           DefaultRegionForTheWorld  1  0  0
+utr> ### ===  Ignore cuts flag:   0
+utr> 
+utr> phot:  for gamma SubType=12 BuildTable=0
+utr>       LambdaPrime table from 200 keV to 100 TeV in 174 bins 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>         PenPhotoElec : Emin=    0 eV  Emax=    1 GeV Fluo
+utr>        PhotoElectric : Emin=    1 GeV Emax=  100 TeV  SauterGavrila Fluo
+utr> 
+utr> compt:  for gamma SubType=13 BuildTable=1
+utr>       Lambda table from 100 eV  to 1 MeV, 20 bins/decade, spline: 1
+utr>       LambdaPrime table from 1 MeV to 100 TeV in 160 bins 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>           PenCompton : Emin=    0 eV  Emax=    1 GeV Fluo
+utr>         KleinNishina : Emin=    1 GeV Emax=  100 TeV Fluo
+utr> 
+utr> conv:  for gamma SubType=14 BuildTable=1
+utr>       Lambda table from 1.022 MeV to 100 TeV, 20 bins/decade, spline: 1
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>        PenConversion : Emin=    0 eV  Emax=    1 GeV
+utr>      BetheHeitlerLPM : Emin=    1 GeV Emax=  100 TeV  ModifiedTsai
+utr> 
+utr> Rayl:  for gamma SubType=11 BuildTable=1
+utr>       Lambda table from 100 eV  to 100 keV, 20 bins/decade, spline: 0
+utr>       LambdaPrime table from 100 keV to 100 TeV in 180 bins 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>          PenRayleigh : Emin=    0 eV  Emax=  100 GeV
+utr> 
+utr> msc:  for e-  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   GoudsmitSaunderson : Emin=    0 eV  Emax=  100 MeV Nbins=120 100 eV  - 100 MeV
+utr>               StepLim=SafetyPlus Rfact=0.08 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr>         WentzelVIUni : Emin=  100 MeV Emax=  100 TeV Nbins=120 100 MeV - 100 TeV
+utr>               StepLim=SafetyPlus Rfact=0.08 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> eIoni:  for e-  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.2, 0.01 mm), integ: 1, fluct: 1, linLossLim= 0.01
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>              PenIoni : Emin=    0 eV  Emax=    1 GeV
+utr>         MollerBhabha : Emin=    1 GeV Emax=  100 TeV  deltaVI
+utr> 
+utr> eBrem:  for e-  SubType=3
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       LPM flag: 1 for E > 1 GeV,  VertexHighEnergyTh(GeV)= 100000
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>              PenBrem : Emin=    0 eV  Emax=    1 GeV
+utr>             eBremLPM : Emin=    1 GeV Emax=  100 TeV  ModifiedTsai
+utr> 
+utr> ePairProd:  for e-  SubType=4
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       Sampling table 25x1001; from 0.1 GeV to 100 TeV 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>            ePairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> CoulombScat:  for e-, integral:1  SubType=1 BuildTable=1
+utr>       Lambda table from 100 MeV to 100 TeV, 20 bins/decade, spline: 1
+utr>       ThetaMin(p) < Theta(degree) < 180; pLimit(GeV^1)= 0.139531
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   eCoulombScattering : Emin=  100 MeV Emax=  100 TeV
+utr> 
+utr> msc:  for e+  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   GoudsmitSaunderson : Emin=    0 eV  Emax=  100 MeV Nbins=120 100 eV  - 100 MeV
+utr>               StepLim=SafetyPlus Rfact=0.08 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr>         WentzelVIUni : Emin=  100 MeV Emax=  100 TeV Nbins=120 100 MeV - 100 TeV
+utr>               StepLim=SafetyPlus Rfact=0.08 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> eIoni:  for e+  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.2, 0.01 mm), integ: 1, fluct: 1, linLossLim= 0.01
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>              PenIoni : Emin=    0 eV  Emax=    1 GeV
+utr>         MollerBhabha : Emin=    1 GeV Emax=  100 TeV  deltaVI
+utr> 
+utr> eBrem:  for e+  SubType=3
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       LPM flag: 1 for E > 1 GeV,  VertexHighEnergyTh(GeV)= 100000
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>              PenBrem : Emin=    0 eV  Emax=    1 GeV
+utr>             eBremLPM : Emin=    1 GeV Emax=  100 TeV  ModifiedTsai
+utr> 
+utr> ePairProd:  for e+  SubType=4
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       Sampling table 25x1001; from 0.1 GeV to 100 TeV 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>            ePairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> annihil:  for e+, integral:1  SubType=5 BuildTable=0
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>             PenAnnih : Emin=    0 eV  Emax=    1 GeV
+utr>             eplus2gg : Emin=    1 GeV Emax=  100 TeV
+utr> 
+utr> CoulombScat:  for e+, integral:1  SubType=1 BuildTable=1
+utr>       Lambda table from 100 MeV to 100 TeV, 20 bins/decade, spline: 1
+utr>       ThetaMin(p) < Theta(degree) < 180; pLimit(GeV^1)= 0.139531
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   eCoulombScattering : Emin=  100 MeV Emax=  100 TeV
+utr> 
+utr> msc:  for proton  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>         WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+utr>               StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> hIoni:  for proton  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.1, 0.05 mm), integ: 1, fluct: 1, linLossLim= 0.01
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>                Bragg : Emin=    0 eV  Emax=    2 MeV  deltaVI
+utr>           BetheBloch : Emin=    2 MeV Emax=  100 TeV  deltaVI
+utr> 
+utr> hBrems:  for proton  SubType=3
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>                hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> hPairProd:  for proton  SubType=4
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       Sampling table 17x1001; from 7.50618 GeV to 100 TeV 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>            hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> CoulombScat:  for proton, integral:1  SubType=1 BuildTable=1
+utr>       Lambda table from threshold  to 100 TeV, 20 bins/decade, spline: 1
+utr>       ThetaMin(p) < Theta(degree) < 180; pLimit(GeV^1)= 0.139531
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+utr> 
+utr> nuclearStopping:  for proton SubType=8 BuildTable=0
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>    ICRU49NucStopping : Emin=    0 eV  Emax=    1 MeV
+utr> 
+utr> msc:  for GenericIon  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>             UrbanMsc : Emin=    0 eV  Emax=  100 TeV
+utr>               StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> ionIoni:  for GenericIon  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.1, 0.02 mm), integ: 1, fluct: 1, linLossLim= 0.02
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>          ParamICRU73 : Emin=    0 eV  Emax=  100 TeV  deltaVI
+utr> 
+utr> nuclearStopping:  for GenericIon SubType=8 BuildTable=0
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>    ICRU49NucStopping : Emin=    0 eV  Emax=    1 MeV
+utr> 
+utr> msc:  for alpha  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>             UrbanMsc : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+utr>               StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> ionIoni:  for alpha  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.1, 0.02 mm), integ: 1, fluct: 1, linLossLim= 0.02
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>             BraggIon : Emin=    0 eV  Emax=7.9452 MeV  deltaVI
+utr>           BetheBloch : Emin=7.9452 MeV Emax=  100 TeV  deltaVI
+utr> 
+utr> nuclearStopping:  for alpha SubType=8 BuildTable=0
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>    ICRU49NucStopping : Emin=    0 eV  Emax=    1 MeV
+utr> 
+utr> msc:  for anti_proton  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>         WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+utr>               StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> hIoni:  for anti_proton  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.1, 0.05 mm), integ: 1, fluct: 1, linLossLim= 0.01
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>             ICRU73QO : Emin=    0 eV  Emax=    2 MeV  deltaVI
+utr>           BetheBloch : Emin=    2 MeV Emax=  100 TeV  deltaVI
+utr> 
+utr> hBrems:  for anti_proton  SubType=3
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>                hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> hPairProd:  for anti_proton  SubType=4
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       Sampling table 17x1001; from 7.50618 GeV to 100 TeV 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>            hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> CoulombScat:  for anti_proton, integral:1  SubType=1 BuildTable=1
+utr>       Lambda table from threshold  to 100 TeV, 20 bins/decade, spline: 1
+utr>       ThetaMin(p) < Theta(degree) < 180; pLimit(GeV^1)= 0.139531
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+utr> 
+utr> msc:  for kaon+  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>         WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+utr>               StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> hIoni:  for kaon+  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.1, 0.05 mm), integ: 1, fluct: 1, linLossLim= 0.01
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>                Bragg : Emin=    0 eV  Emax=1.05231 MeV  deltaVI
+utr>           BetheBloch : Emin=1.05231 MeV Emax=  100 TeV  deltaVI
+utr> 
+utr> hBrems:  for kaon+  SubType=3
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>                hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> hPairProd:  for kaon+  SubType=4
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       Sampling table 18x1001; from 3.94942 GeV to 100 TeV 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>            hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> CoulombScat:  for kaon+, integral:1  SubType=1 BuildTable=1
+utr>       Lambda table from threshold  to 100 TeV, 20 bins/decade, spline: 1
+utr>       ThetaMin(p) < Theta(degree) < 180; pLimit(GeV^1)= 0.139531
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+utr> 
+utr> msc:  for kaon-  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>         WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+utr>               StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> hIoni:  for kaon-  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.1, 0.05 mm), integ: 1, fluct: 1, linLossLim= 0.01
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>             ICRU73QO : Emin=    0 eV  Emax=1.05231 MeV  deltaVI
+utr>           BetheBloch : Emin=1.05231 MeV Emax=  100 TeV  deltaVI
+utr> 
+utr> hBrems:  for kaon-  SubType=3
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>                hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> hPairProd:  for kaon-  SubType=4
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       Sampling table 18x1001; from 3.94942 GeV to 100 TeV 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>            hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> CoulombScat:  for kaon-, integral:1  SubType=1 BuildTable=1
+utr>       Used Lambda table of kaon+
+utr>       ThetaMin(p) < Theta(degree) < 180; pLimit(GeV^1)= 0.139531
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+utr> 
+utr> msc:  for mu+  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>         WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+utr>               StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> muIoni:  for mu+  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.1, 0.05 mm), integ: 1, fluct: 1, linLossLim= 0.01
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>                Bragg : Emin=    0 eV  Emax=  200 keV  deltaVI
+utr>           BetheBloch : Emin=  200 keV Emax=    1 GeV  deltaVI
+utr>         MuBetheBloch : Emin=    1 GeV Emax=  100 TeV
+utr> 
+utr> muBrems:  for mu+  SubType=3
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>               MuBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> muPairProd:  for mu+  SubType=4
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       Sampling table 21x1001; from 1 GeV to 100 TeV 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>           muPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> CoulombScat:  for mu+, integral:1  SubType=1 BuildTable=1
+utr>       Lambda table from threshold  to 100 TeV, 20 bins/decade, spline: 1
+utr>       ThetaMin(p) < Theta(degree) < 180; pLimit(GeV^1)= 0.139531
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+utr> 
+utr> msc:  for mu-  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>         WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+utr>               StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> muIoni:  for mu-  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.1, 0.05 mm), integ: 1, fluct: 1, linLossLim= 0.01
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>             ICRU73QO : Emin=    0 eV  Emax=  200 keV  deltaVI
+utr>           BetheBloch : Emin=  200 keV Emax=    1 GeV  deltaVI
+utr>         MuBetheBloch : Emin=    1 GeV Emax=  100 TeV
+utr> 
+utr> muBrems:  for mu-  SubType=3
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>               MuBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> muPairProd:  for mu-  SubType=4
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       Sampling table 21x1001; from 1 GeV to 100 TeV 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>           muPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> CoulombScat:  for mu-, integral:1  SubType=1 BuildTable=1
+utr>       Used Lambda table of mu+
+utr>       ThetaMin(p) < Theta(degree) < 180; pLimit(GeV^1)= 0.139531
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+utr> 
+utr> msc:  for pi+  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>         WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+utr>               StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> hIoni:  for pi+  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.1, 0.05 mm), integ: 1, fluct: 1, linLossLim= 0.01
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>                Bragg : Emin=    0 eV  Emax=297.505 keV  deltaVI
+utr>           BetheBloch : Emin=297.505 keV Emax=  100 TeV  deltaVI
+utr> 
+utr> hBrems:  for pi+  SubType=3
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>                hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> hPairProd:  for pi+  SubType=4
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       Sampling table 20x1001; from 1.11656 GeV to 100 TeV 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>            hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> CoulombScat:  for pi+, integral:1  SubType=1 BuildTable=1
+utr>       Lambda table from threshold  to 100 TeV, 20 bins/decade, spline: 1
+utr>       ThetaMin(p) < Theta(degree) < 180; pLimit(GeV^1)= 0.139531
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+utr> 
+utr> msc:  for pi-  SubType= 10
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>         WentzelVIUni : Emin=    0 eV  Emax=  100 TeV Nbins=240 100 eV  - 100 TeV
+utr>               StepLim=Minimal Rfact=0.2 Gfact=2.5 Sfact=0.6 DispFlag:1 Skin=3 Llimit=1
+utr> 
+utr> hIoni:  for pi-  SubType=2
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       StepFunction=(0.1, 0.05 mm), integ: 1, fluct: 1, linLossLim= 0.01
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>             ICRU73QO : Emin=    0 eV  Emax=297.505 keV  deltaVI
+utr>           BetheBloch : Emin=297.505 keV Emax=  100 TeV  deltaVI
+utr> 
+utr> hBrems:  for pi-  SubType=3
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>                hBrem : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> hPairProd:  for pi-  SubType=4
+utr>       dE/dx and range tables from 100 eV  to 100 TeV in 240 bins
+utr>       Lambda tables from threshold to 100 TeV, 20 bins/decade, spline: 1
+utr>       Sampling table 20x1001; from 1.11656 GeV to 100 TeV 
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>            hPairProd : Emin=    0 eV  Emax=  100 TeV  ModifiedMephi
+utr> 
+utr> CoulombScat:  for pi-, integral:1  SubType=1 BuildTable=1
+utr>       Used Lambda table of pi+
+utr>       ThetaMin(p) < Theta(degree) < 180; pLimit(GeV^1)= 0.139531
+utr>       ===== EM models for the G4Region  DefaultRegionForTheWorld ======
+utr>   eCoulombScattering : Emin=    0 eV  Emax=  100 TeV
+utr> 
+utr> ====================================================================
+utr>                   HADRONIC PROCESSES SUMMARY (verbose level 1)
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for B-
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: B-Inelastic
+utr>         Model:                      FTFP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for D-
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: D-Inelastic
+utr>         Model:                      FTFP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for He3
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV /n ---> 100 TeV/n
+utr>      Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for alpha
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV /n ---> 100 TeV/n
+utr>      Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for anti_He3
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV /n ---> 100.1 MeV/n
+utr>         Model:              AntiAElastic: 100 MeV/n ---> 100 TeV/n
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr>   Process: anti_He3Inelastic
+utr>         Model:                      FTFP: 0 eV /n ---> 100 TeV/n
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for anti_alpha
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV /n ---> 100.1 MeV/n
+utr>         Model:              AntiAElastic: 100 MeV/n ---> 100 TeV/n
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr>   Process: anti_alphaInelastic
+utr>         Model:                      FTFP: 0 eV /n ---> 100 TeV/n
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for anti_deuteron
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV /n ---> 100.1 MeV/n
+utr>         Model:              AntiAElastic: 100 MeV/n ---> 100 TeV/n
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr>   Process: anti_deuteronInelastic
+utr>         Model:                      FTFP: 0 eV /n ---> 100 TeV/n
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for anti_lambda
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: anti_lambdaInelastic
+utr>         Model:                      FTFP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for anti_neutron
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV  ---> 100.1 MeV
+utr>         Model:              AntiAElastic: 100 MeV ---> 100 TeV
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr>   Process: anti_neutronInelastic
+utr>         Model:                      FTFP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for anti_proton
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV  ---> 100.1 MeV
+utr>         Model:              AntiAElastic: 100 MeV ---> 100 TeV
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr>   Process: anti_protonInelastic
+utr>         Model:                      FTFP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for anti_triton
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV /n ---> 100.1 MeV/n
+utr>         Model:              AntiAElastic: 100 MeV/n ---> 100 TeV/n
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr>   Process: anti_tritonInelastic
+utr>         Model:                      FTFP: 0 eV /n ---> 100 TeV/n
+utr>      Cr_sctns:              AntiAGlauber: 0 eV  ---> 25.6 PeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for deuteron
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV /n ---> 100 TeV/n
+utr>      Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for kaon+
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: kaon+Inelastic
+utr>         Model:                      FTFP: 3 GeV ---> 100 TeV
+utr>         Model:            BertiniCascade: 0 eV  ---> 6 GeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for kaon-
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: kaon-Inelastic
+utr>         Model:                      FTFP: 3 GeV ---> 100 TeV
+utr>         Model:            BertiniCascade: 0 eV  ---> 6 GeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for lambda
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: lambdaInelastic
+utr>         Model:                      FTFP: 3 GeV ---> 100 TeV
+utr>         Model:            BertiniCascade: 0 eV  ---> 6 GeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for neutron
+utr> 
+utr>   Process: hadElastic
+utr>         Model:             hElasticCHIPS: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:        G4NeutronElasticXS: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: neutronInelastic
+utr>         Model:                      FTFP: 3 GeV ---> 100 TeV
+utr>         Model:            BertiniCascade: 0 eV  ---> 6 GeV
+utr>      Cr_sctns:      G4NeutronInelasticXS: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: nCapture
+utr>         Model:               nRadCapture: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:        G4NeutronCaptureXS: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for pi+
+utr> 
+utr>   Process: hadElastic
+utr>         Model:           hElasticGlauber: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: pi+Inelastic
+utr>         Model:                      FTFP: 3 GeV ---> 100 TeV
+utr>         Model:            BertiniCascade: 0 eV  ---> 6 GeV
+utr>      Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for pi-
+utr> 
+utr>   Process: hadElastic
+utr>         Model:           hElasticGlauber: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: pi-Inelastic
+utr>         Model:                      FTFP: 3 GeV ---> 100 TeV
+utr>         Model:            BertiniCascade: 0 eV  ---> 6 GeV
+utr>      Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for proton
+utr> 
+utr>   Process: hadElastic
+utr>         Model:             hElasticCHIPS: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: protonInelastic
+utr>         Model:                      FTFP: 3 GeV ---> 100 TeV
+utr>         Model:            BertiniCascade: 0 eV  ---> 6 GeV
+utr>      Cr_sctns:  BarashenkovGlauberGribov: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for sigma-
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV  ---> 100 TeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr>   Process: sigma-Inelastic
+utr>         Model:                      FTFP: 3 GeV ---> 100 TeV
+utr>         Model:            BertiniCascade: 0 eV  ---> 6 GeV
+utr>      Cr_sctns:            Glauber-Gribov: 0 eV  ---> 100 TeV
+utr> 
+utr> ---------------------------------------------------
+utr>                            Hadronic Processes for triton
+utr> 
+utr>   Process: hadElastic
+utr>         Model:              hElasticLHEP: 0 eV /n ---> 100 TeV/n
+utr>      Cr_sctns:  Glauber-Gribov Nucl-nucl: 0 eV  ---> 25.6 PeV
+utr> 
+utr> ================================================================
+utr> =======================================================================
+utr> ======       Pre-compound/De-excitation Physics Parameters     ========
+utr> =======================================================================
+utr> Type of pre-compound inverse x-section              3
+utr> Pre-compound model active                           1
+utr> Pre-compound excitation low energy (MeV)            0.1
+utr> Pre-compound excitation high energy (MeV)           30
+utr> Type of de-excitation inverse x-section             3
+utr> Type of de-excitation factory                       Evaporation+GEM
+utr> Number of de-excitation channels                    68
+utr> Min excitation energy (keV)                         0.01
+utr> Min energy per nucleon for multifragmentation (MeV) 2e+05
+utr> Limit excitation energy for Fermi BreakUp (MeV)     20
+utr> Level density (1/MeV)                               0.075
+utr> Use simple level density model                      1
+utr> Use discrete excitation energy of the residual      0
+utr> Time limit for long lived isomeres (ns)             1000
+utr> Isomer production flag                              1
+utr> Internal e- conversion flag                         1
+utr> Store e- internal conversion data                   0
+utr> Electron internal conversion ID                     2
+utr> Correlated gamma emission flag                      0
+utr> Max 2J for sampling of angular correlations         10
+utr> =======================================================================
+utr> G4VDecayChannel::FillDaughters() - [ anti_neutron ]1:nu_e is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ kaon+ ]1:nu_mu is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ kaon+ ]2:nu_e is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ kaon+ ]2:nu_mu is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ kaon- ]1:anti_nu_mu is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ kaon- ]2:anti_nu_e is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ kaon- ]2:anti_nu_mu is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ kaon0L ]2:nu_e is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ kaon0L ]2:anti_nu_e is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ kaon0L ]2:nu_mu is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ kaon0L ]2:anti_nu_mu is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ mu+ ]1:nu_e is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ mu- ]1:anti_nu_e is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ neutron ]1:anti_nu_e is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ pi+ ]1:nu_mu is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> G4VDecayChannel::FillDaughters() - [ pi- ]1:anti_nu_mu is not defined !!
+utr>  The BR of this decay mode is set to zero.
+utr> 
+utr> =======================================================================
+utr> --> G4MTRunManager::CreateAndStartWorkers() --> Initializing workers...
+utr> =======================================================================
+utr> 
+utr> G4WT0 > ================================================================================
+utr> G4WT0 > ActionInitialization: The following quantities will be saved to the output file:
+utr> G4WT0 > EKIN
+utr> G4WT0 > PARTICLE
+utr> G4WT0 > VOLUME
+utr> G4WT0 > ================================================================================
+utr> Setting new filename prefix : 'attenuation_1.00_MeV_sim_'
+utr> Using file name prefix 'attenuation_1.00_MeV_sim_0' ...
+utr> G4WT0 >  Progress: [               0/200000]  0.00 %	Running time:   0d  0h   0mn   4s
+utr> Setting new filename prefix : 'attenuation_2.00_MeV_sim_'
+utr> Using file name prefix 'attenuation_2.00_MeV_sim_0' ...
+utr> G4WT0 >  Progress: [               0/200000]  0.00 %	Running time:   0d  0h   0mn   4s
+utrwrapper.py> Processing output at 2023-01-27 14-56-17 (current runtime: 0h 00m 14s)
+utrwrapper.py> Found 2 output files to process
+utrwrapper.py> Processing output file '../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0'...
+getHistogram> #############################################
+getHistogram> > getHistogram
+getHistogram> > TREENAME     : utr
+getHistogram> > FILES        : *attenuation_2.00_MeV_sim_0_t*.root*
+getHistogram> > INPUTDIR     : ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events
+getHistogram> > OUTPUTFILE   : attenuation_2.00_MeV_sim_0_hist.root
+getHistogram> > OUTPUTDIR    : ../Output_utr/Attenuation/Attenuation_Pb_10mm/Event_Histograms
+getHistogram> > QUANTITY     : ekin
+getHistogram> > BINNING      : 1 keV
+getHistogram> > EMAX         : 12 MeV
+getHistogram> > MAXID        : 0
+getHistogram> > MULTIPLICITY : 1
+getHistogram> > ADDBACK      : FALSE
+getHistogram> #############################################
+getHistogram> > Joining all files in '../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events' that contain 'attenuation_2.00_MeV_sim_0_t' and '.root':
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t59.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t12.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t23.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t68.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t81.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t41.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t0.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t99.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t70.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t27.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t85.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t16.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t74.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t4.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t45.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t8.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t49.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t91.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t78.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t33.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t51.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t60.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t89.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t95.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t37.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t64.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t55.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t48.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t9.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t90.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t32.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t79.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t50.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t61.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t88.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t94.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t36.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t65.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t54.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t13.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t58.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t69.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t22.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t80.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t1.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t40.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t98.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t71.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t26.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t84.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t17.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t75.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t44.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t5.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t30.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t92.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t52.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t19.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t28.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t63.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t34.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t96.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t67.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t56.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t11.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t82.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t20.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t3.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t42.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t73.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t38.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t86.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t24.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t15.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t77.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t46.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t7.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t10.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t83.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t21.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t43.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t2.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t39.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t72.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t87.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t25.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t14.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t76.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t6.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t47.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t31.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t93.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t18.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t53.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t62.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t29.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t35.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t97.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t66.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_2.00_MeV_sim_0_t57.root
+getHistogram> > Rounded up EMAX from 12 MeV to 12.0005 MeV in order to match the requested BINNING of 0.001 MeV
+getHistogram> > Processed 146357 entries
+getHistogram> > Created output file attenuation_2.00_MeV_sim_0_hist.root
+histogramToTxt> Converting histogram det0 ...	Output file ../Output_utr/Attenuation/Attenuation_Pb_10mm/Event_Histograms/attenuation_2.00_MeV_sim_0_hist_det0.txt created.
+utrwrapper.py> Processing output file '../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0'...
+getHistogram> #############################################
+getHistogram> > getHistogram
+getHistogram> > TREENAME     : utr
+getHistogram> > FILES        : *attenuation_1.00_MeV_sim_0_t*.root*
+getHistogram> > INPUTDIR     : ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events
+getHistogram> > OUTPUTFILE   : attenuation_1.00_MeV_sim_0_hist.root
+getHistogram> > OUTPUTDIR    : ../Output_utr/Attenuation/Attenuation_Pb_10mm/Event_Histograms
+getHistogram> > QUANTITY     : ekin
+getHistogram> > BINNING      : 1 keV
+getHistogram> > EMAX         : 12 MeV
+getHistogram> > MAXID        : 0
+getHistogram> > MULTIPLICITY : 1
+getHistogram> > ADDBACK      : FALSE
+getHistogram> #############################################
+getHistogram> > Joining all files in '../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events' that contain 'attenuation_1.00_MeV_sim_0_t' and '.root':
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t72.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t39.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t43.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t6.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t21.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t83.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t10.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t47.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t76.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t14.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t25.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t2.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t87.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t29.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t62.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t53.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t18.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t93.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t31.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t57.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t66.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t97.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t35.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t63.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t28.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t19.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t52.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t92.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t30.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t56.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t67.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t96.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t34.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t38.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t73.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t42.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t20.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t7.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t82.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t11.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t46.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t77.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t15.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t3.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t24.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t86.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t88.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t61.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t50.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t79.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t32.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t90.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t48.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t54.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t9.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t65.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t36.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t94.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t71.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t98.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t40.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t80.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t22.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t5.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t69.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t58.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t13.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t44.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t75.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t17.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t84.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t1.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t26.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t70.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t99.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t41.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t81.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t4.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t68.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t23.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t12.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t59.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t45.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t74.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t16.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t85.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t27.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t0.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t89.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t60.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t51.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t33.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t78.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t91.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t49.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t55.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t8.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t64.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t37.root
+getHistogram> ../Output_utr/Attenuation/Attenuation_Pb_10mm/Raw_Events/attenuation_1.00_MeV_sim_0_t95.root
+getHistogram> > Rounded up EMAX from 12 MeV to 12.0005 MeV in order to match the requested BINNING of 0.001 MeV
+getHistogram> > Processed 114716 entries
+getHistogram> > Created output file attenuation_1.00_MeV_sim_0_hist.root
+histogramToTxt> Converting histogram det0 ...	Output file ../Output_utr/Attenuation/Attenuation_Pb_10mm/Event_Histograms/attenuation_1.00_MeV_sim_0_hist_det0.txt created.
+utrwrapper.py> Finished processing extended macro file '/nfs/ldas02/zh02/home/mbeuschlein/utr/macros/Attenuation/attenuation_Pb_10mm.xmac' at 2023-01-27 14-56-20 (took 0h 00m 17s)
